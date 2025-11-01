@@ -5,6 +5,8 @@ const connectDB = require('./config/db');
 const { connect } = require('mongoose');
 
 connectDB();
+// Body parser middleware
+app.use(express.json());
 
 
 
@@ -14,7 +16,7 @@ const PORT = 5000;
 app.get('/', (req, res) => {
   res.send('<h1>Hello Muskan! Backend is running... 🚀</h1>');
 });
-
+app.use('/api/users', require('./routes/userRoutes'));
 
 
 app.listen(PORT, () => {
