@@ -83,6 +83,46 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 
+// @desc    Update user survey data
+// @route   PUT /api/users/survey
+// @access  Private
+const updateUserSurvey = asyncHandler(async (req, res) => {
+  // 1. Get the data from the frontend
+  const { techStack, skillLevel } = req.body;
+
+  if (!techStack || !skillLevel) {
+    res.status(400);
+    throw new Error('Please provide techStack and skillLevel');
+  }
+
+  // 2. Find the user (the 'protect' middleware gives us req.user)
+  const user = await User.findById(req.user.id);
+
+  if (user) {
+    // 3. Update the user's data
+    user.techStack = techStack;
+    user.skillLevel = skillLevel;
+    user.surveyCompleted = true; // Mark survey as done
+
+    // 4. Save the updated user to the database
+    const updatedUser = await user.save();
+
+    // 5. Send back the updated user data (but not the password)
+    res.status(200).json({
+      _id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      techStack: updatedUser.techStack,
+      skillLevel: updatedUser.skillLevel,
+      surveyCompleted: updatedUser.surveyCompleted,
+      token: generateToken(updatedUser._id), // Send a new token with fresh data
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
 
 
 // Function to generate JWT
@@ -95,5 +135,5 @@ const generateToken = (id) => {
 
 
 module.exports = {
-  registerUser,loginUser,getMe
+  registerUser,loginUser,getMe,updateUserSurvey
 };

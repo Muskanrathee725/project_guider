@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 require('dotenv').config();
 const connectDB = require('./config/db');
@@ -7,7 +8,7 @@ const { connect } = require('mongoose');
 connectDB();
 // Body parser middleware
 app.use(express.json());
-
+app.use(cors());
 
 
 const PORT = 5000;
