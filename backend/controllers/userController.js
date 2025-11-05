@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
+const { get } = require('mongoose');
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -73,6 +74,17 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password');
   }
 });
+
+
+const getMe = asyncHandler(async (req, res) => {
+  // Middleware ne token verify karke user ko 'req.user' mein daal diya hai.
+  // Hum bas usko wapas bhej denge.
+  res.status(200).json(req.user);
+});
+
+
+
+
 // Function to generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -83,5 +95,5 @@ const generateToken = (id) => {
 
 
 module.exports = {
-  registerUser,loginUser
+  registerUser,loginUser,getMe
 };
