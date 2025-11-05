@@ -1,2 +1,10 @@
-/node_modules
-.env
+# Dependencies
+frontend/node_modules
+backend/node_modules
+
+# Environment Variables
+backend/.env
+
+# Vite cache
+frontend/dist
+frontend/.vite
